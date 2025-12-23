@@ -304,9 +304,53 @@
         </div>
 
         <script>
-            // small script to set current year
-            document.getElementById("year").textContent =
-                new Date().getFullYear();
+            // small script to set current year and enable simple interactions
+            (function () {
+                const yearEl = document.getElementById("year");
+                if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+                console.log("Interactive script loaded");
+
+                // Click the primary button to temporarily change the hero heading
+                const primary = document.querySelector(".btn.primary");
+                const heroHeading = document.getElementById("hero-heading");
+                if (primary && heroHeading) {
+                    primary.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        const original = heroHeading.textContent;
+                        heroHeading.textContent = "Thanks — you clicked!";
+                        setTimeout(
+                            () => (heroHeading.textContent = original),
+                            1600
+                        );
+                    });
+                }
+
+                // Toggle a lightweight 'light' theme using the `t` key
+                function setTheme(theme) {
+                    if (theme === "light")
+                        document.body.setAttribute("data-theme", "light");
+                    else document.body.removeAttribute("data-theme");
+                }
+
+                document.addEventListener("keydown", (e) => {
+                    if (e.key && e.key.toLowerCase() === "t") {
+                        const isLight =
+                            document.body.getAttribute("data-theme") ===
+                            "light";
+                        setTheme(isLight ? "dark" : "light");
+                    }
+                });
+
+                // Minimal runtime styles for the light theme
+                const lightStyle = document.createElement("style");
+                lightStyle.textContent = `
+                    body[data-theme="light"] { color-scheme: light; background: #f8fafc; color: #0f1724; }
+                    body[data-theme="light"] header, body[data-theme="light"] .panel, body[data-theme="light"] .hero { background: #ffffff; color: #0f1724; box-shadow: none; }
+                    body[data-theme="light"] .logo { color: white; }
+                `;
+                document.head.appendChild(lightStyle);
+            })();
         </script>
     </body>
 </html>
